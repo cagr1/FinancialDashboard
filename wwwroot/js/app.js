@@ -18,7 +18,6 @@ sidebar.addEventListener('mouseenter', () => {
 });
 
 
-
 sidebar.addEventListener('mouseleave', () => {
     if (!isPinned) {
         sidebar.classList.replace('w-64', 'w-20');
@@ -32,14 +31,10 @@ sidebarToggle.addEventListener('click', () => {
     
     // Control de clases principales
 
-   
-
     sidebar.classList.toggle('w-64', isPinned);
     sidebar.classList.toggle('w-20', !isPinned);
     mainContent.classList.toggle('ml-64', isPinned);
-    mainContent.classList.toggle('ml-20', !isPinned);
-    
-
+    mainContent.classList.toggle('ml-20', !isPinned);   
    
     // Control de icono
     toggleIcon.innerHTML = isPinned ? 
@@ -49,12 +44,6 @@ sidebarToggle.addEventListener('click', () => {
 
     sidebar.classList.toggle('pinned', isPinned);
 });
-
-
-
-
-
-
 
 
 function formatDateWithTime(dateString, isEndDate = false, subtractYear = false) {
@@ -75,26 +64,37 @@ function formatDateWithTime(dateString, isEndDate = false, subtractYear = false)
 
 
 
+
+// function updateCardYears() {
+//     const dateInput = document.getElementById('startDate').value;
+    
+//     if (dateInput) {
+//         const date = new Date(dateInput + 'T00:00:00Z');
+//         const currentYear = date.getUTCFullYear();
+//         const previousYear = currentYear - 1;
+
+//         // Actualizar todos los años actuales
+//         document.querySelectorAll('.card-year-actual').forEach(element => {
+//             element.textContent = currentYear;
+//         });
+
+//         // Actualizar todos los años anteriores (si existen)
+//         document.querySelectorAll('.card-year-previous').forEach(element => {
+//             element.textContent = previousYear;
+//         });
+//     }
+// }
+// document.getElementById('startDate').addEventListener('change', updateCardYears);
+
 function updateCardYears() {
     const dateInput = document.getElementById('startDate').value;
+    if (!dateInput) return;
     
-    if (dateInput) {
-        const date = new Date(dateInput + 'T00:00:00Z');
-        const currentYear = date.getUTCFullYear();
-        const previousYear = currentYear - 1;
-
-        // Actualizar todos los años actuales
-        document.querySelectorAll('.card-year-actual').forEach(element => {
-            element.textContent = currentYear;
-        });
-
-        // Actualizar todos los años anteriores (si existen)
-        document.querySelectorAll('.card-year-previous').forEach(element => {
-            element.textContent = previousYear;
-        });
-    }
+    const year = new Date(dateInput).getFullYear();
+    document.querySelectorAll('.card-year-actual').forEach(el => el.textContent = year);
+    document.querySelectorAll('.card-year-previous').forEach(el => el.textContent = year - 1);
 }
-document.getElementById('startDate').addEventListener('change', updateCardYears);
+
 
 // Configurar fechas iniciales (año actual)
 function setDefaultDates() {
@@ -106,109 +106,108 @@ function setDefaultDates() {
     document.getElementById('endDate').value = defaultEnd;
 }
 
-
-
-
-async function loadData() {
+// 3. Generadores de datos ficticios
+function generateSalesData(startDate, endDate) {
+    const days = (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24);
+    const baseSales = Math.floor(Math.random() * 50000) + 10000;
+    const variation = Math.floor(Math.random() * 20000) - 5000;
     
-    // Obtener fechas de los inputs        
-    const startDateInput = document.getElementById('startDate').value;
-    const endDateInput = document.getElementById('endDate').value;
-    
-    // Agregar tiempos automáticamente
-    const startDate = formatDateWithTime(startDateInput);
-    const endDate = formatDateWithTime(endDateInput, true);
-    const year = startDateInput ? new Date(startDateInput).getUTCFullYear(): new Date().getUTCFullYear();
-    const previousStartDate = formatDateWithTime(startDateInput, false, true);
-    const previousEndDate = formatDateWithTime(endDateInput, true, true);
-
-    try {
-        //Grupo Ventas
-        const [ventasData, acumuladoData] = await Promise.all([
-            fetchData(`http://localhost:5179/api/Dashboard/sales/by-date?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`),
-            fetchData(`http://localhost:5179/api/Dashboard/sales/accumulated?endDate=${encodeURIComponent(endDate)}`)
-        ]);
-        
-        //Grupos ventas anteriores
-        const [ventasPreviousData, acumuladoPreviousData] = await Promise.all([
-            fetchData(`http://localhost:5179/api/Dashboard/sales/by-date?startDate=${encodeURIComponent(previousStartDate)}&endDate=${encodeURIComponent(previousEndDate)}`),
-            fetchData(`http://localhost:5179/api/Dashboard/sales/accumulated?endDate=${encodeURIComponent(previousEndDate)}`)
-        ]);
-        
-        //Grupo Porcentaje Ventas
-        const [porcentajeVentasActual, porcentajeVentasPrevious] = await Promise.all([
-            fetchData(`http://localhost:5179/api/Dashboard/variation/income?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`),
-            fetchData(`http://localhost:5179/api/Dashboard/variation/income?startDate=${encodeURIComponent(previousStartDate)}&endDate=${encodeURIComponent(previousEndDate)}`)
-        ]);
-
-        //Grupo Utilidades
-        const [utilidadesData, utilidadesAcumuladasData, porcentajeUtilidades] = await Promise.all([
-            fetchData(`http://localhost:5179/api/Dashboard/annual-earnings?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`),
-            fetchData(`http://localhost:5179/api/Dashboard/accumulated-earnings?endDate=${encodeURIComponent(endDate)}`),
-            fetchData(`http://localhost:5179/api/Dashboard/variation/profit?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`)
-        ]);
-        
-        //Grupo Financial
-        const [financialData, salesCategoryData, marginEarningsData, liquidezData] = await Promise.all([
-            fetchData(`http://localhost:5179/api/Dashboard/profit-loss-byMonth/${year}`),
-            fetchData(`http://localhost:5179/api/Dashboard/sales-by-category?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`),
-            fetchData(`http://localhost:5179/api/Dashboard/margin-earnings?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`),
-            fetchData(`http://localhost:5179/api/Dashboard/liquidity-ratio?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`)
-        ]);
-
-
-        
-        
-
-       
-        // 5. Actualizar la UI con los datos
-        updateStats(ventasData, acumuladoData, ventasPreviousData, acumuladoPreviousData, porcentajeVentasActual, porcentajeVentasPrevious, utilidadesData, utilidadesAcumuladasData, porcentajeUtilidades, marginEarningsData, liquidezData); 
-        renderFinancialChart(financialData);
-        renderSalesCategoryChart(salesCategoryData);
-        
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Error al cargar los datos');
-    }
+    return {
+        totalSales: baseSales + variation * (days / 365),
+        variationPercentage: Math.floor(Math.random() * 50) - 10
+    };
 }
 
+function generateEarningsData(startDate, endDate) {
+    const days = (new Date(endDate) - new Date(startDate)) / (1000 * 60 * 60 * 24);
+    const baseEarnings = Math.floor(Math.random() * 20000) + 5000;
+    
+    return {
+        totalEarnings: baseEarnings * (days / 365),
+        variationPercentage: Math.floor(Math.random() * 30) + 5
+    };
+}
+
+function generateFinancialData(year) {
+    const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    return months.map(month => ({
+        NameMonth: month,
+        TotalIncome: Math.floor(Math.random() * 15000) + 5000,
+        TotalExpenses: Math.floor(Math.random() * 10000) + 3000,
+        TotalEarnings: Math.floor(Math.random() * 8000) + 2000
+    }));
+}
+
+function generateSalesCategoryData(startDate, endDate) {
+    const categories = ['Electrónica', 'Ropa', 'Hogar', 'Alimentos', 'Libros', 'Juguetes', 'Deportes'];
+    return categories.map(category => ({
+        description: category,
+        saldo: Math.floor(Math.random() * 15000) + 2000
+    }));
+}
+
+function generateMarginData() {
+    return {
+        totalEarnings: (Math.random() * 0.5) + 0.3 // 30% a 80%
+    };
+}
+
+function generateLiquidityData() {
+    return {
+        liquidityLevel: (Math.random() * 2) + 0.5 // 0.5 a 2.5
+    };
+}
+
+// 4. Función para simular fetchData
 async function fetchData(url) {
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error('HTTP error  + ${response.status}');
-        }
-        return await response.json();
-    } catch (error) {
-        console.error('Error fetching:', url, error);
-        return [];
+    // Simulamos un retraso de red
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    // Parseamos los parámetros de la URL
+    const params = new URLSearchParams(url.split('?')[1]);
+    const startDate = params.get('startDate')?.replace(' ', 'T') + 'Z';
+    const endDate = params.get('endDate')?.replace(' ', 'T') + 'Z';
+    const year = url.match(/byMonth\/(\d+)/)?.[1];
+    
+    // Determinamos qué tipo de datos generar basado en la URL
+    if (url.includes('sales/by-date')) {
+        return generateSalesData(startDate, endDate);
+    } else if (url.includes('sales/accumulated')) {
+        return generateSalesData('2000-01-01', endDate);
+    } else if (url.includes('variation/income') || url.includes('variation/profit')) {
+        return { variationPercentage: Math.floor(Math.random() * 50) - 10 };
+    } else if (url.includes('annual-earnings')) {
+        return generateEarningsData(startDate, endDate);
+    } else if (url.includes('accumulated-earnings')) {
+        return generateEarningsData('2000-01-01', endDate);
+    } else if (url.includes('profit-loss-byMonth')) {
+        return generateFinancialData(year);
+    } else if (url.includes('sales-by-category')) {
+        return generateSalesCategoryData(startDate, endDate);
+    } else if (url.includes('margin-earnings')) {
+        return generateMarginData();
+    } else if (url.includes('liquidity-ratio')) {
+        return generateLiquidityData();
     }
+    
+    return {};
 }
 
-
+// 5. Funciones para actualizar la UI (se mantienen igual)
 function updateVariacion(elementId, value) {
     const element = document.getElementById(elementId);
     if (!element) return;
 
-    // Determinar si es positivo/negativo
     const isPositive = value >= 0;
-    
-    // Actualizar clases
     element.className = `card-variacion ${isPositive ? 'positive' : 'negative'}`;
-    
-    // Formatear valor
     element.textContent = `${isPositive ? '+' : ''}${value.toFixed(2)}%`;
 }
 
-
-// Actualizar estadísticas
-function updateStats(ventas, acumulado,ventasPrevious, acumuladoPrevious, porcentajeActual, porcentajePrevious, utilidadesData, utilidadesAcumuladasData, porcentajeUtilidades,marginEarningsData, liquidezData) {
+function updateStats(ventas, acumulado, ventasPrevious, acumuladoPrevious, porcentajeActual, porcentajePrevious, utilidadesData, utilidadesAcumuladasData, porcentajeUtilidades, marginEarningsData, liquidezData) {
     const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
     });
-
-    
 
     const margenNetoPorcentaje = parseFloat((marginEarningsData.totalEarnings * 100).toFixed(2));
     const metaMargenNetoUtilidades = 50.00;
@@ -220,14 +219,13 @@ function updateStats(ventas, acumulado,ventasPrevious, acumuladoPrevious, porcen
     document.getElementById('ventasAcumuladas').textContent = formatter.format(acumulado.totalSales) + ' acumulado';
     document.getElementById('ventasRangoPrevious').textContent = formatter.format(ventasPrevious.totalSales);
     document.getElementById('ventasAcumuladasPrevious').textContent = formatter.format(acumuladoPrevious.totalSales) + ' acumulado';
-    document.getElementById('porcentajeVentasActual').textContent = `${porcentajeActual}%`;
-    document.getElementById('porcentajeVentasPrevio').textContent = `${porcentajePrevious}%`;
+    document.getElementById('porcentajeVentasActual').textContent = `${porcentajeActual.variationPercentage}%`;
+    document.getElementById('porcentajeVentasPrevio').textContent = `${porcentajePrevious.variationPercentage}%`;
     document.getElementById('utilidadesActuales').textContent = formatter.format(utilidadesData.totalEarnings);
     document.getElementById('utilidadesAcumuladas').textContent = formatter.format(utilidadesAcumuladasData.totalEarnings) + ' acumulado';
-    document.getElementById('porcentajeUtilidades').textContent = `${porcentajeUtilidades}%`;
-    document.getElementById('margenUtilidadNeta').textContent = `${margenNetoPorcentaje}%` ;
-    document.getElementById('liquidezCorriente').textContent = `${liquidezData.liquidityLevel}%`;
-
+    document.getElementById('porcentajeUtilidades').textContent = `${porcentajeUtilidades.variationPercentage}%`;
+    document.getElementById('margenUtilidadNeta').textContent = `${margenNetoPorcentaje}%`;
+    document.getElementById('liquidezCorriente').textContent = liquidezData.liquidityLevel.toFixed(2);
 
     updateVariacion('porcentajeVentasActual', porcentajeActual.variationPercentage);
     updateVariacion('porcentajeVentasPrevio', porcentajePrevious.variationPercentage);
@@ -236,9 +234,68 @@ function updateStats(ventas, acumulado,ventasPrevious, acumuladoPrevious, porcen
     updateVariacion('variacionLiquidez', variacionliquidez);
 }
 
-// Cargar datos iniciales
+// 6. Función principal para cargar datos
+async function loadData() {
+    const startDateInput = document.getElementById('startDate').value;
+    const endDateInput = document.getElementById('endDate').value;
+    
+    const startDate = formatDateWithTime(startDateInput);
+    const endDate = formatDateWithTime(endDateInput, true);
+    const year = startDateInput ? new Date(startDateInput).getUTCFullYear() : new Date().getUTCFullYear();
+    const previousStartDate = formatDateWithTime(startDateInput, false, true);
+    const previousEndDate = formatDateWithTime(endDateInput, true, true);
+
+    try {
+        // Simulamos todas las llamadas a la API con datos ficticios
+        const [ventasData, acumuladoData, ventasPreviousData, acumuladoPreviousData, 
+               porcentajeVentasActual, porcentajeVentasPrevious, utilidadesData, 
+               utilidadesAcumuladasData, porcentajeUtilidades, marginEarningsData, 
+               liquidezData] = await Promise.all([
+            fetchData(`http://localhost:5179/api/Dashboard/sales/by-date?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`),
+            fetchData(`http://localhost:5179/api/Dashboard/sales/accumulated?endDate=${encodeURIComponent(endDate)}`),
+            fetchData(`http://localhost:5179/api/Dashboard/sales/by-date?startDate=${encodeURIComponent(previousStartDate)}&endDate=${encodeURIComponent(previousEndDate)}`),
+            fetchData(`http://localhost:5179/api/Dashboard/sales/accumulated?endDate=${encodeURIComponent(previousEndDate)}`),
+            fetchData(`http://localhost:5179/api/Dashboard/variation/income?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`),
+            fetchData(`http://localhost:5179/api/Dashboard/variation/income?startDate=${encodeURIComponent(previousStartDate)}&endDate=${encodeURIComponent(previousEndDate)}`),
+            fetchData(`http://localhost:5179/api/Dashboard/annual-earnings?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`),
+            fetchData(`http://localhost:5179/api/Dashboard/accumulated-earnings?endDate=${encodeURIComponent(endDate)}`),
+            fetchData(`http://localhost:5179/api/Dashboard/variation/profit?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`),
+            fetchData(`http://localhost:5179/api/Dashboard/margin-earnings?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`),
+            fetchData(`http://localhost:5179/api/Dashboard/liquidity-ratio?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`)
+        ]);
+
+        // Obtenemos datos para los gráficos
+        const [financialData, salesCategoryData] = await Promise.all([
+            fetchData(`http://localhost:5179/api/Dashboard/profit-loss-byMonth/${year}`),
+            fetchData(`http://localhost:5179/api/Dashboard/sales-by-category?startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`)
+        ]);
+
+        updateStats(ventasData, acumuladoData, ventasPreviousData, acumuladoPreviousData, 
+                   porcentajeVentasActual, porcentajeVentasPrevious, utilidadesData, 
+                   utilidadesAcumuladasData, porcentajeUtilidades, marginEarningsData, 
+                   liquidezData);
+        
+        // Estas funciones deberías implementarlas según tu librería de gráficos
+        renderFinancialChart(financialData);
+        renderSalesCategoryChart(salesCategoryData);
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al cargar los datos ficticios');
+    }
+}
+
+// 7. Inicialización
 document.addEventListener('DOMContentLoaded', () => {
-    setDefaultDates(); 
+    setDefaultDates();
+    updateCardYears();
     loadData();
-    //window.addEventListener('resize', manageSidebar);
 });
+
+// Event listeners
+document.getElementById('startDate').addEventListener('change', () => {
+    updateCardYears();
+    loadData();
+});
+
+document.getElementById('endDate').addEventListener('change', loadData);
