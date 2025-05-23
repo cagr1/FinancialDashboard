@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "E:\\Carlos\\Development Tools\\Proyectos\\Cisepro Desktop\\BACK UP\\SysCisepro4.2\\DashboardAPI\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "E:\\Carlos\\Development Tools\\Proyectos\\Cisepro Desktop\\BACK UP\\SysCisepro4.2\\DashboardAPI\\wwwroot\\img\\cisepro.png",
+      "PackagePath": "staticwebassets\\img\\cisepro.png"
+    },
+    {
+      "Id": "E:\\Carlos\\Development Tools\\Proyectos\\Cisepro Desktop\\BACK UP\\SysCisepro4.2\\DashboardAPI\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "E:\\Carlos\\Development Tools\\Proyectos\\Cisepro Desktop\\BACK UP\\SysCisepro4.2\\DashboardAPI\\wwwroot\\js\\app.js",
+      "PackagePath": "staticwebassets\\js\\app.js"
+    },
+    {
+      "Id": "E:\\Carlos\\Development Tools\\Proyectos\\Cisepro Desktop\\BACK UP\\SysCisepro4.2\\DashboardAPI\\wwwroot\\js\\chart.js",
+      "PackagePath": "staticwebassets\\js\\chart.js"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.DashboardAPI.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.DashboardAPI.props",
+      "PackagePath": "build\\DashboardAPI.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.DashboardAPI.props",
+      "PackagePath": "buildMultiTargeting\\DashboardAPI.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.DashboardAPI.props",
+      "PackagePath": "buildTransitive\\DashboardAPI.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

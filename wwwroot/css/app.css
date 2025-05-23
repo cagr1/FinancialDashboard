@@ -1,0 +1,407 @@
+
+
+.pinned .menu-text {
+    opacity: 1 !important;    
+} 
+
+ #sidebar {
+    width: 4rem; /* 80px */
+    height: calc(100vh - 4rem); /* Altura completa menos la barra de navegación */
+    top: 1rem; /* Espacio superior */
+    left: 1rem; /* Espacio izquierdo */
+    transition : widht 0.3s ease-in-out;
+    box-shadow: 4px 4px 15px  rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: linear-gradient(
+        135deg, 
+        rgba(59, 130, 246, 0.5) 0%,    /* Azul suave */
+        rgba(253, 230, 138, 0.5) 100%  /* Amarillo suave */
+    );
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px; /* Bordes redondeados */
+    margin: 0rem  0rem 1rem  0rem;
+} 
+ #sidebar:hover, #sidebar.pinned {
+    width: 15rem; /* 256px */
+    background: linear-gradient(
+        135deg, 
+        rgba(59, 130, 246, 0.7) 0%,     /* Azul aún más intenso */
+        rgba(253, 230, 138, 0.7) 100%   /* Amarillo más intenso */
+    );
+    left: 1rem;
+}
+
+#sidebar a:hover  {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(255, 255, 255, 0.2) 100%
+    );
+    transform: translateX(5px);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#sidebar svg {
+    transition: all 0.3s ease;
+}
+
+
+#mainContent {
+    transition:  margin-left 0.3s ease-in-out;
+    margin-left: 5rem;
+    
+}
+
+#sidebar a:hover svg {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+
+#sidebar a:nth-child(1):hover svg {
+    color: #2563eb; /* Azul más oscuro */
+}
+
+#sidebar a:nth-child(2):hover svg {
+    color: #d97706; /* Amarillo oscuro */
+}
+
+#sidebar a:nth-child(3):hover svg {
+    color: #059669; /* Verde oscuro */
+}
+
+/* Texto del menú */
+
+.menu-text {
+    color: #1e293b; 
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#sidebar:hover .menu-text,
+.pinned .menu-text {
+    opacity: 1;
+    transform: translateX(5px);
+}
+
+
+#sidebar a {
+    box-shadow: inset 2px 0 4px rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05); /* Reducida opacidad */
+    margin: 0.5rem; /* Mayor margen para mejor visibilidad */
+    border-radius: 8px; /* Bordes redondeados */
+}
+
+   #sidebar:hover ~ #mainContent,
+   #sidebar.pinned ~ #mainContent {
+       margin-left: 16rem; /* ml-64 */
+   }
+  @media (min-width: 992px) {
+    .sidenav {
+      transform: translateX(0) !important;
+    }
+  }
+
+  .glass-sidebar {
+    background: rgba(255, 255, 255, 0.15) ;
+    backdrop-filter: blur(10px) ;
+    -webkit-backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.sidebar-gradient {
+    background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(168,85,247,0.1) 100%);
+}
+
+#sidebarToggle {
+    transition: all 0.3s ease;
+}
+
+#sidebarToggle:hover {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 255, 255, 0.3) 100%
+    ) !important;
+}
+
+
+#sidebarToggle:hover svg {
+   color: #92400e; /* Amarillo oscuro */
+   
+}
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+    padding: 0.8rem;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    
+}
+
+.data-card {    
+    border-radius: 10px;
+    padding: 0.8rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-left: 5px solid;
+    border-image: linear-gradient(to right, currentColor 50%, transparent 50%) 1;
+    background: white;
+    background-clip: padding-box;
+    gap: 0.2rem;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    flex: 1; /* Ocupa espacio disponible */
+    min-width: 200px; /* Ancho mínimo consistente */
+}
+
+.data-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+
+}
+
+.data-card:hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    pointer-events: none;
+}
+
+
+.data-card.ingresos ,
+.data-card.ingresos .card-main-value {    
+    color: #2563eb;    
+}
+
+ .data-card.ingresos {        
+    border-color: #2563eb; /* Azul corporativo */
+    background: linear-gradient(to right, #eff6ff 85%, #2563eb15);    
+} 
+
+.data-card.egresos ,
+.data-card.egresos .card-main-value {
+    color: #dc2626;
+}
+
+
+.data-card.egresos {
+    border-color: #dc2626;
+    background: linear-gradient(to right, #fee2e2 85%, #dc262630);
+}
+
+.data-card.utilidad ,
+.data-card.utilidad .card-main-value {    
+    color: #059669;
+}
+
+.data-card.utilidad {        
+    border-color: #059669; /* Verde financiero */
+    background: linear-gradient(to right, #d1fae5 85%, #05966915);
+}
+
+.data-card.patrimonio,
+.data-card.patrimonio .card-main-value {
+    color: #4f46e5;
+}
+
+.data-card.patrimonio {    
+    border-color: #4f46e5; 
+    background: linear-gradient(to right, #eef2ff 85%, #4f46e515);
+}
+
+
+.data-card.ingresos .card-divider { background: #2563eb; } 
+.data-card.egresos .card-divider { background: #dc2626; }
+.data-card.utilidad .card-divider { background: #059669; }
+.data-card.patrimonio .card-divider { background: #4f46e5; }
+
+
+.card-header {       
+    margin-bottom: 0.2rem;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.card-title {
+    font-size: 0.75rem;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+    color: #475569;
+}
+
+
+.card-main-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0.1rem 0;
+}
+
+.card-acumulado {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 0.25rem;
+}
+
+.card-divider {
+    height: 1px;
+    background: rgba(100, 116, 139, 0.2);
+    margin: 0.25rem 0;
+    border: none;
+}
+
+
+/* Nuevos estilos para variación */
+.card-variacion {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.35rem;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.card-variacion::before {
+    content: '▲';
+    font-size: 0.6rem;
+}
+
+.card-variacion.negative::before {
+    content: '▼';
+}
+
+.card-variacion.positive {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.card-variacion.negative {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.card-secondary-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.data-card.ingresos .card-divider {    
+    background: #3b82f6;
+}
+
+.data-card.egresos .card-divider {
+    background: #ef4444;    
+}
+
+.data-card.utilidad .card-divider {    
+    background:  #10b981;    
+}
+
+.data-card.capital .card-divider {
+    background: #64748b;    
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.card-year {
+    font-weight: 600;
+    color: #334155;
+}
+
+/* Nuevas clases para los indicadores */
+.data-card.margen,
+.data-card.margen .card-main-value {    
+    color: #059669;    
+}
+
+.data-card.margen {        
+    border-color: #059669;
+    background: linear-gradient(to right, #d1fae5 85%, #05966915);    
+}
+
+.data-card.liquidez,
+.data-card.liquidez .card-main-value {    
+    color: #d97706;    
+}
+
+.data-card.liquidez {        
+    border-color: #d97706;
+    background: linear-gradient(to right, #ffedd5 85%, #d9770615);    
+}
+
+.data-card.endeudamiento,
+.data-card.endeudamiento .card-main-value {    
+    color: #dc2626;    
+}
+
+.data-card.endeudamiento {        
+    border-color: #dc2626;
+    background: linear-gradient(to right,#fee2e2 85%, #dc262615);    
+}
+
+.data-card.eficiencia,
+.data-card.eficiencia .card-main-value {    
+    color: #4f46e5;    
+}
+
+.data-card.eficiencia {        
+    border-color: #4f46e5;
+    background: linear-gradient(to right, #eef2ff 85%, #4f46e515);    
+}
+
+.data-card.rentabilidad,
+.data-card.rentabilidad .card-main-value {    
+    color: #d97706;    
+}
+
+.data-card.rentabilidad {        
+    border-color: #d97706;
+    background: linear-gradient(to right,  #fef3c7 85%, #d9770615);    
+}
+
+/* Divisores específicos */
+.data-card.margen .card-divider { background: #059669; }
+.data-card.liquidez .card-divider { background: #d97706; }
+.data-card.endeudamiento .card-divider { background: #dc2626; }
+.data-card.eficiencia .card-divider { background: #4f46e5; }
+.data-card.rentabilidad .card-divider { background: #d97706; }
+
+
+
+@media (min-width: 1024px) {
+    .cards-container {
+        grid-template-columns: repeat(4, minmax(0, 1fr)); /* Grid simétrico */
+        gap: 2rem;
+        } 
+   }
+
+
+
+
+
+
+
